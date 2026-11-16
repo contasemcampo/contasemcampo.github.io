@@ -140,6 +140,8 @@ table { font-variant-numeric: tabular-nums; }
 .obs-tabela th:first-child, .obs-tabela td:first-child { text-align: left; }
 .obs-tabela thead th { font-weight: 600; color: var(--obs-muted); vertical-align: bottom; }
 .obs-fontes th, .obs-fontes td { text-align: left; white-space: nowrap; }
+.obs-paralela td:nth-child(2) { white-space: normal; min-width: 14rem; text-align: left; }
+.obs-paralela th:nth-child(2) { text-align: left; }
 .obs-fontes td:nth-child(4) { white-space: normal; min-width: 11rem; }
 .obs-lista-analises { list-style: none; padding: 0; }
 .obs-lista-analises li { padding: 0.4rem 0; border-bottom: 1px solid var(--obs-line); }

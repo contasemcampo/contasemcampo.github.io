@@ -56,8 +56,17 @@ TXT = {
         "sim": "sim", "nao": "não", "nd": "não identificado",
         "fontes_nota": "Fonte: de onde os valores do ano foram lidos — o balanço do próprio ano, a coluna comparativa do balanço seguinte ou uma publicação resumida. Ajuste: algum valor passou por decisão metodológica registrada.",
         "falta": "O que ainda falta",
-        "falta_txt": lambda anos: f"O clube disputou Série A, B ou C em {', '.join(map(str, anos))}, mas não localizamos demonstrações financeiras desses exercícios. Se você souber onde estão, avise.",
-        "falta_nada": "Todos os exercícios em que o clube disputou Série A, B ou C estão na base.",
+        "falta_txt": lambda anos: f"O clube disputou Série A, B, C ou D em {', '.join(map(str, anos))}, mas não localizamos demonstrações financeiras desses exercícios. Se você souber onde estão, avise.",
+        "falta_nada": "Todos os exercícios em que o clube disputou Série A, B, C ou D estão na base.",
+        "paralela": "A outra entidade do clube",
+        "paralela_intro": {
+            "associacao_remanescente": "O futebol passou para a SAF, mas a associação continua existindo e publicando o próprio balanço — em geral é nela que fica a dívida antiga. Os números acima são os da SAF; estes são os da associação.",
+            "associacao_pre_conversao": "No período anterior à conversão, a associação publicava as próprias demonstrações. Os números acima são os da entidade que representa o clube no ano; estes são os da associação.",
+            "associacao_que_disputou_saf_principal": "Neste ano a associação é que disputou o campeonato, enquanto a SAF assina as demonstrações usadas acima. Estes são os números da associação.",
+        },
+        "paralela_col": {"ano": "Ano", "entidade": "Entidade", "receita": "Receita comparável",
+                         "divida": "Dívida identificada", "pl": "Patrimônio líquido"},
+        "paralela_nota": "Não some estes valores aos de cima: são entidades diferentes, e parte das operações aparece nas duas.",
         "comparar": lambda n: f"Comparar {n} com outros clubes",
         "como_link": "Como analisamos",
         "versao": lambda v, d: f"Base {v}, atualizada em {d}.",
@@ -90,8 +99,17 @@ TXT = {
         "sim": "yes", "nao": "no", "nd": "not identified",
         "fontes_nota": "Source: where the year's figures were read from — the year's own statement, the comparative column of the next statement, or a summary publication. Adjusted: at least one value went through a recorded methodological decision.",
         "falta": "What is still missing",
-        "falta_txt": lambda anos: f"The club played Série A, B or C in {', '.join(map(str, anos))}, but we have not located financial statements for those years. If you know where they are, let us know.",
-        "falta_nada": "Every year in which the club played Série A, B or C is in the dataset.",
+        "falta_txt": lambda anos: f"The club played Série A, B, C or D in {', '.join(map(str, anos))}, but we have not located financial statements for those years. If you know where they are, let us know.",
+        "falta_nada": "Every year in which the club played Série A, B, C or D is in the dataset.",
+        "paralela": "The club's other entity",
+        "paralela_intro": {
+            "associacao_remanescente": "Football moved to the SAF, but the association still exists and publishes its own statements — the historic debt usually stays there. The figures above are the SAF's; these are the association's.",
+            "associacao_pre_conversao": "Before the conversion, the association published its own statements. The figures above are those of the entity representing the club that year; these are the association's.",
+            "associacao_que_disputou_saf_principal": "This year the association played the championship while the SAF signs the statements used above. These are the association's figures.",
+        },
+        "paralela_col": {"ano": "Year", "entidade": "Entity", "receita": "Comparable revenue",
+                         "divida": "Identified debt", "pl": "Equity"},
+        "paralela_nota": "Do not add these to the figures above: they are different entities, and some operations appear in both.",
         "comparar": lambda n: f"Compare {n} with other clubs",
         "como_link": "How we analyse",
         "versao": lambda v, d: f"Dataset {v}, updated {d}.",
@@ -292,6 +310,31 @@ def pagina_clube(c: dict, linhas: list[dict], inds: dict, analises: list[dict],
         f"<li><a href='{pref}{a['href']}'>{a['title']}</a> <span class='obs-ui'>{a['date']}</span></li>" for a in rel)
         + "</ul>") if rel else f"<p class='obs-vazio'>{t['sem_analises']}</p>"
 
+    # Entidade paralela: a associação que continua publicando depois da SAF.
+    par = c.get("entidade_paralela") or []
+    bloco_par = ""
+    if par:
+        papeis = [r["papel"] for r in par if r.get("papel")]
+        intro = t["paralela_intro"].get(papeis[0] if papeis else "", "") if papeis else ""
+        cp = t["paralela_col"]
+        linhas_par = "".join(
+            f"<tr><th>{r['ano']}</th><td>{r.get('nome_entidade') or '—'}</td>"
+            f"<td>{fmt(r.get('receita_rec'), 'rs', lang)}</td>"
+            f"<td>{fmt(r.get('divida_identificada_total'), 'rs', lang)}</td>"
+            f"<td>{fmt(r.get('patrimonio_liq'), 'rs', lang)}</td></tr>" for r in par)
+        bloco_par = f'''
+## {t["paralela"]}
+
+{intro}
+
+```{{=html}}
+<table class="obs-tabela obs-paralela"><thead><tr><th>{cp["ano"]}</th><th>{cp["entidade"]}</th>
+<th>{cp["receita"]}</th><th>{cp["divida"]}</th><th>{cp["pl"]}</th></tr></thead>
+<tbody>{linhas_par}</tbody></table>
+<p class="obs-indicador-nota">{t["paralela_nota"]}</p>
+```
+'''
+
     pend = c.get("anos_sem_demonstracao") or []
     falta = t["falta_txt"](pend) if pend else t["falta_nada"]
 
@@ -351,6 +394,7 @@ clubeAtual = "{c['clube']}"
 {tabela}
 ```
 
+{bloco_par}
 ## {t['analises']}
 
 ```{{=html}}
