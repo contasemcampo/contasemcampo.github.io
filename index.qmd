@@ -1,0 +1,71 @@
+---
+title: "Contas em Campo"
+pagetitle: "Contas em Campo — Entenda o dinheiro por trás do futebol"
+page-layout: full
+title-block-banner: false
+listing:
+  id: ultimas
+  contents: "analises/posts"
+  sort: "date desc"
+  type: default
+  max-items: 5
+  fields: [date, title, description, categories, reading-time]
+  date-format: "D [de] MMMM [de] YYYY"
+---
+
+```{=html}
+<style>#title-block-header { display: none; }</style>
+<section class="obs-capa column-screen">
+  <div class="obs-capa-inner">
+    <p class="obs-capa-chapeu">Análises e números sobre as finanças do futebol brasileiro</p>
+    <h1>Entenda o dinheiro por trás do futebol.</h1>
+    <p>Receitas, dívidas, aportes e decisões que afetam o seu clube. Compare os números,
+    acompanhe as análises e veja o que os balanços revelam — e o que deixam de mostrar.</p>
+    <p class="obs-capa-botoes">
+      <a class="obs-botao obs-botao-claro" href="compare.html">Comparar clubes</a>
+      <a class="obs-botao obs-botao-claro" href="analises/index.html">Ler as análises</a>
+    </p>
+  </div>
+</section>
+```
+
+::: {.column-body}
+
+## Últimas análises
+
+::: {#ultimas}
+:::
+
+[Todas as análises, por editoria →](analises/index.qmd){.obs-ui}
+
+:::
+
+```{=html}
+<section class="obs-faixa column-screen">
+  <div class="obs-faixa-inner">
+    <div>
+      <h2>Como as contas do seu clube se comparam às dos rivais?</h2>
+      <p>Escolha um tema e até quatro clubes. Receitas, obrigações, resultado, caixa,
+      gastos com futebol, aportes do dono e desempenho em campo, ano a ano.</p>
+    </div>
+    <ul class="obs-faixa-links obs-ui">
+      <li><a href="compare.html?indicador=receita_rec">Quem arrecada mais</a></li>
+      <li><a href="compare.html?indicador=divida_identificada_total">Quem deve mais</a></li>
+      <li><a href="compare.html?indicador=intensidade_pessoal">Quanto da receita vai para a folha</a></li>
+      <li><a href="compare.html?indicador=afac_saldo">Quem depende do dono</a></li>
+    </ul>
+  </div>
+</section>
+```
+
+::: {.column-body}
+
+## Um retrato por clube
+
+Cada clube tem uma página com os números publicados nos balanços, ano a ano: receitas, resultado, patrimônio, dívidas e caixa, com as ressalvas que valem para cada um e o que ainda falta coletar. [Ver todos os clubes →](clubes/index.qmd)
+
+## De onde vêm os números
+
+Das demonstrações financeiras que os próprios clubes publicam. Cada valor é lido no documento original, conferido por uma segunda leitura e testado contra a identidade do balanço. O que foi ajustado, e por quê, está em [Como analisamos](como-analisamos.qmd). Erros encontrados entram em [Correções](correcoes.qmd).
+
+:::

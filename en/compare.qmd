@@ -1,0 +1,14 @@
+---
+title: "Compare"
+description: "How your club's books compare with its rivals', by theme."
+---
+
+```{ojs}
+//| echo: false
+lang = "en"
+base = "../dados/"
+```
+
+[Pick a theme, an indicator and up to four clubs. Figures are those published in each club's financial statements, in nominal BRL millions, standardised as described in [How we analyse](how-we-analyse.qmd). A blank field means no source was available, never zero.]{.obs-coluna-intro}
+
+{{< include ../_compare.qmd >}}

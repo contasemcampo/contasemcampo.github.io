@@ -1,0 +1,72 @@
+---
+title: "How we analyse"
+description: "Where the numbers come from, how they are checked and standardised, what they do not show, and how we correct them."
+toc: true
+---
+
+```{ojs}
+//| echo: false
+lang = "en"
+base = "../dados/"
+versao = d3.json(base + "versao.json")
+indicadoresCsv = d3.csv(base + "indicadores.csv")
+```
+
+Everything the portal publishes comes from the financial statements the clubs themselves release: balance sheet, income statement, cash flow statement, notes and the independent auditor's report. This page explains the path from the document to the number that appears in an analysis.
+
+## Sources
+
+Statements published by the clubs on their websites, transparency portals or official gazettes, for financial years from 2020 onwards. The frame is the set of clubs that played Série A, B or C of the Brazilian championship in each year. Not every club publishes, and not every published document can be located; each club's page lists the missing years.
+
+When the year's own document was not found but the next year's statement carries the comparative column, we use that column and flag the origin. Compare warns when this applies to a chosen club.
+
+## How each value is read
+
+1. **Extraction.** Each value is read from the original document, recording the page and passage it came from.
+2. **Verification.** A second, independent reading checks every field against the source.
+3. **Reconciliation.** Every balance sheet is tested: assets = current liabilities + non-current liabilities + equity. The few cases that do not close are documented.
+4. **Methodological decisions.** When a value requires a choice — an unusually classified item, a restatement, a non-recurring event — the decision is numbered, recorded with its criterion and evidence, and linked to the cells it affects. Compare and the club pages flag values adjusted this way.
+
+## The published indicators {#indicadores}
+
+Compare and the club pages show a chosen set of indicators, organised by the questions a reader asks. Each is defined below. Monetary values in nominal BRL millions, not adjusted for inflation.
+
+```{ojs}
+//| echo: false
+Inputs.table(indicadoresCsv.map(d => ({
+  Theme: d.tema_en, Indicator: d.rotulo_en, Definition: d.description_en
+})), {rows: 40, layout: "auto"})
+```
+
+Criteria that apply throughout:
+
+- **Comparable revenue** excludes player trading and league items, so comparisons across clubs and years do not hinge on one large sale.
+- **Identified debt** adds up the liability items that are actual debt — loans, tax instalments, labour and civil settlements, transfer fees owed to clubs. Deferred revenue, provisions for contingencies and advances are left out. It therefore covers a median of about 94% of total liabilities, and less at some clubs.
+- **Personnel costs** may or may not include administrative staff, depending on what the club discloses; the dataset records which.
+- **A blank means no source, never zero.**
+
+## What the numbers do not show
+
+- A balance sheet is a photograph of the year end. It does not show what happened in between.
+- Associations and SAFs publish in different formats, and in the year of conversion the association may consolidate the SAF, or the SAF's year may cover only a few months. [SAF or association: what changes in the books](../analises/posts/2026-11-saf-ou-associacao/index.html) explains this in detail (in Portuguese).
+- What is not in a note is not in the dataset. Clubs that disclose little appear with fewer indicators — which is information in itself.
+- Nothing here is a forecast, investment advice or a judgement of a club's management.
+
+## Corrections
+
+Errors happen. When a published value changes, the correction goes into a new dataset version, is logged in [Corrections](corrections.qmd) with the previous value, the new one and the reason, and the analyses that quoted the number get a note. Each analysis states the dataset version it relies on.
+
+## Dataset version
+
+```{ojs}
+//| echo: false
+html`<p class="obs-ui">Current version: <strong>${versao.versao}</strong>, ${versao.data}.${versao.doi ? html` Deposit DOI: <a href="https://doi.org/${versao.doi}">${versao.doi}</a>.` : ""}</p>`
+```
+
+Versioning: MAJOR changes structure; MINOR adds clubs, years or fields; PATCH fixes values.
+
+## Academic use of the full dataset {#acesso}
+
+Beyond the indicators published here, the full dataset holds the traceability of every value, the methodological decisions, revenue and personnel breakdowns, debt, capital advances, related parties, restatements, sporting performance and the checks of every build step. It is deposited in an academic repository under restricted access and shared for non-commercial research on justified request, with citation. Researchers can ask through the [project's GitHub](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+> Lisboa, T. A. B. de (2026). *Financial statements of Brazilian football clubs: a panel dataset*.

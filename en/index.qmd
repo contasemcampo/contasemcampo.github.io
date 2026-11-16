@@ -1,0 +1,70 @@
+---
+title: "Contas em Campo"
+pagetitle: "Contas em Campo — The money behind Brazilian football"
+page-layout: full
+title-block-banner: false
+listing:
+  id: ultimas
+  contents: "analyses/posts"
+  sort: "date desc"
+  type: default
+  max-items: 5
+  fields: [date, title, description, categories, reading-time]
+---
+
+```{=html}
+<style>#title-block-header { display: none; }</style>
+<section class="obs-capa column-screen">
+  <div class="obs-capa-inner">
+    <p class="obs-capa-chapeu">Analysis and figures on the finances of Brazilian football</p>
+    <h1>Understand the money behind the game.</h1>
+    <p>Revenue, debt, owner funding and the decisions that shape your club. Compare the
+    numbers, follow the analyses and see what the statements reveal — and what they leave out.</p>
+    <p class="obs-capa-botoes">
+      <a class="obs-botao obs-botao-claro" href="compare.html">Compare clubs</a>
+      <a class="obs-botao obs-botao-claro" href="analyses/index.html">Read the analyses</a>
+    </p>
+  </div>
+</section>
+```
+
+::: {.column-body}
+
+## Latest analyses
+
+::: {#ultimas}
+:::
+
+Most pieces are written in Portuguese first; selected ones are translated. [All analyses →](analyses/index.qmd){.obs-ui}
+
+:::
+
+```{=html}
+<section class="obs-faixa column-screen">
+  <div class="obs-faixa-inner">
+    <div>
+      <h2>How do your club's books compare with its rivals'?</h2>
+      <p>Pick a theme and up to four clubs. Revenue, liabilities, results, cash, football
+      spending, owner funding and on-pitch performance, year by year.</p>
+    </div>
+    <ul class="obs-faixa-links obs-ui">
+      <li><a href="compare.html?indicador=receita_rec">Who earns the most</a></li>
+      <li><a href="compare.html?indicador=divida_identificada_total">Who owes the most</a></li>
+      <li><a href="compare.html?indicador=intensidade_pessoal">How much revenue goes on wages</a></li>
+      <li><a href="compare.html?indicador=afac_saldo">Who depends on the owner</a></li>
+    </ul>
+  </div>
+</section>
+```
+
+::: {.column-body}
+
+## One portrait per club
+
+Every club has a page with the figures from its statements, year by year: revenue, results, equity, debt and cash, with the caveats that apply and what is still missing. [See all clubs →](clubs/index.qmd)
+
+## Where the numbers come from
+
+From the financial statements the clubs themselves publish. Each value is read from the original document, checked by a second reading and tested against the balance sheet identity. What was adjusted, and why, is in [How we analyse](how-we-analyse.qmd). Errors found go to [Corrections](corrections.qmd).
+
+:::

@@ -1,0 +1,26 @@
+---
+title: "About"
+description: "What Contas em Campo is, who makes it and how to get in touch."
+---
+
+Contas em Campo is a portal of analysis on the finances of Brazilian football. The raw material is the financial statements the clubs themselves publish — football companies (SAFs) and member-owned associations alike. The work is to read those documents with accounting rigour, standardise what is comparable, and tell what the numbers say in language any fan can follow.
+
+The public product is the interpretation: analyses, comparisons between clubs and a portrait of each one, always with the source in view. The full dataset behind it is kept privately and documented in [How we analyse](how-we-analyse.qmd).
+
+## What you will find
+
+- **[Analyses](analyses/index.qmd)** — pieces by section: club accounts, SAFs and control, the money in the game, the player market, debt and financing, and a section for readers new to balance sheets. Most are written in Portuguese first.
+- **[Compare](compare.qmd)** — up to four clubs side by side, by theme, with the caveats each comparison calls for.
+- **[Clubs](clubs/index.qmd)** — one page per club, with the latest snapshot, the trend and what is still missing.
+
+## Independence
+
+The portal has no sponsors, sells no data and provides no services to the clubs, investors or lenders analysed here. If that changes, it will be stated on this page before any related content goes live. Nothing here is investment advice or an assessment of anyone's management.
+
+## Who makes it
+
+Contas em Campo is written and maintained by **Tiago Amadeu Braga de Lisboa**, a certified accountant and master's student in Controllership and Accounting at the Federal University of Minas Gerais (UFMG), Brazil. The dataset grew out of his master's research.
+
+## Contact
+
+Corrections, suggestions and leads on documents we have not located: open an issue on the [project's GitHub](https://github.com/contasemcampo/contasemcampo.github.io/issues).

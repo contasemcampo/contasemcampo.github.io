@@ -1,0 +1,282 @@
+/*-- scss:defaults --*/
+$font-family-sans-serif: "Source Serif 4", Georgia, serif;
+$headings-font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+$headings-font-weight: 600;
+$font-size-root: 18px;
+$line-height-base: 1.65;
+$navbar-font-family: "Barlow Condensed", sans-serif;
+$web-font-path: false; // não carrega a fonte padrão do tema cosmo
+
+/*-- scss:rules --*/
+
+// ---------- Tipografia ----------
+h1, h2, h3, h4, .navbar, .listing-title, .obs-num {
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  letter-spacing: 0.005em;
+}
+h1, .title { font-size: 2.6rem; font-weight: 700; line-height: 1.05; }
+h2 { font-size: 1.75rem; margin-top: 2.2rem; }
+h3 { font-size: 1.3rem; }
+.navbar { font-size: 1.15rem; }
+.navbar-brand .navbar-title { font-weight: 700; }
+main p, main li { max-width: 68ch; }
+.subtitle, .description { color: var(--obs-muted); }
+:focus-visible { outline: 3px solid var(--obs-flag); outline-offset: 2px; }
+
+// Texto de interface e números: Barlow, com algarismos tabulares
+.obs-ui, table, .obs-painel, .listing-date, .listing-reading-time,
+.quarto-title-meta, .obs-aviso, .page-footer {
+  font-family: "Barlow", system-ui, sans-serif;
+}
+table { font-variant-numeric: tabular-nums; }
+
+// ---------- Capa: o campo listrado ----------
+.obs-capa {
+  // Listras de corte de grama, na horizontal, como vistas da arquibancada
+  background:
+    repeating-linear-gradient(
+      180deg,
+      var(--obs-field) 0 56px,
+      color-mix(in srgb, var(--obs-field) 88%, #ffffff) 56px 112px
+    );
+  color: var(--obs-field-ink);
+  padding: 3.6rem 1rem 3.6rem;
+  margin-top: -1.8rem;
+  margin-bottom: 0;
+}
+.obs-capa-inner { max-width: 960px; margin: 0 auto; padding: 0 1rem; }
+.obs-capa h1 {
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  line-height: 0.98;
+  margin: 0 0 1.2rem;
+  color: var(--obs-field-ink);
+  max-width: 14ch;
+}
+.obs-capa p {
+  font-size: 1.15rem;
+  max-width: 52ch;
+  margin: 0;
+  color: color-mix(in srgb, var(--obs-field-ink) 88%, transparent);
+}
+.obs-capa-chapeu {
+  font-family: "Barlow", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.85rem !important;
+  margin-bottom: 1rem !important;
+  color: var(--obs-flag) !important;
+}
+.obs-capa-botoes { margin-top: 1.8rem !important; display: flex; flex-wrap: wrap; gap: 0.7rem; }
+.obs-botao-claro {
+  border-color: color-mix(in srgb, var(--obs-field-ink) 55%, transparent) !important;
+  color: var(--obs-field-ink) !important;
+  background: color-mix(in srgb, var(--obs-field-ink) 10%, transparent) !important;
+  text-decoration: none; font-size: 1.05rem !important; padding: 0.55rem 1.1rem !important;
+}
+.obs-botao-claro:hover { background: var(--obs-field-ink) !important; color: var(--obs-field) !important; }
+
+// ---------- Faixa do Compare na capa ----------
+.obs-faixa {
+  background: var(--obs-panel);
+  padding: 2.8rem 1rem;
+  margin: 2.5rem 0;
+}
+.obs-faixa-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 1rem;
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 2.5rem; align-items: start;
+}
+.obs-faixa h2 { margin-top: 0; font-size: 2rem; }
+.obs-faixa-links { list-style: none; padding: 0; margin: 0.4rem 0 0; }
+.obs-faixa-links li { border-bottom: 1px solid var(--obs-line); padding: 0.55rem 0; }
+.obs-faixa-links a { font-weight: 600; text-decoration: none; }
+.obs-faixa-links a::after { content: " →"; color: var(--obs-muted); }
+@media (max-width: 720px) { .obs-faixa-inner { grid-template-columns: 1fr; gap: 1rem; } }
+
+// ---------- Capa: destaque e grade de análises ----------
+#ultimas .quarto-post:first-child .listing-title { font-size: 2.1rem; line-height: 1.05; }
+#ultimas .quarto-post:first-child .listing-description { font-size: 1.1rem; }
+#ultimas .quarto-post { border-bottom: 1px solid var(--obs-line); padding-bottom: 1rem; }
+
+// ---------- Compare: abas de tema ----------
+.obs-compare-topo { margin-bottom: 1rem; }
+.obs-temas { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.obs-tema {
+  font: inherit; font-family: "Barlow", sans-serif; font-weight: 600; font-size: 0.95rem;
+  padding: 0.35rem 0.8rem; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--obs-line); background: transparent; color: var(--obs-ink);
+}
+.obs-tema[aria-selected="true"] { background: var(--obs-field); color: var(--obs-field-ink); border-color: var(--obs-field); }
+.obs-tema-pergunta { font-family: "Barlow Condensed", sans-serif; font-size: 1.5rem; font-weight: 600; margin: 0.4rem 0 0.8rem; }
+.obs-comparabilidade ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
+.obs-comparabilidade li { margin: 0.2rem 0; }
+.obs-versao { margin-left: auto; color: var(--obs-muted); font-size: 0.9rem; }
+.obs-relacionadas ul { list-style: none; padding: 0; }
+.obs-relacionadas li { padding: 0.4rem 0; border-bottom: 1px solid var(--obs-line); }
+.obs-relacionadas li .obs-ui { color: var(--obs-muted); font-size: 0.9rem; margin-left: 0.5rem; }
+
+// ---------- Clubes: medalhão, cabeçalho, cartões, grade ----------
+.obs-medalhao {
+  --c1: var(--obs-field); --c2: var(--obs-field-ink);
+  display: inline-grid; place-items: center;
+  width: 4.6rem; height: 4.6rem; border-radius: 50%;
+  background: var(--c1); color: var(--ct, #fff);
+  font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 0.04em;
+  box-shadow: inset 0 0 0 3px var(--c2), inset 0 0 0 5px var(--c1);
+  flex: none;
+}
+.obs-medalhao-p { width: 2.6rem; height: 2.6rem; font-size: 0.9rem; }
+.obs-clube-cab { display: flex; gap: 1.2rem; align-items: center; margin: -0.5rem 0 1.5rem; }
+.obs-clube-meta { margin: 0.1rem 0; color: var(--obs-muted); }
+.obs-cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 0.8rem; margin: 1rem 0 0.5rem; }
+.obs-cartao { background: var(--obs-panel); border-radius: 6px; padding: 0.8rem 0.9rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.obs-cartao-rotulo { font-family: "Barlow", sans-serif; font-size: 0.85rem; color: var(--obs-muted); }
+.obs-cartao .obs-num { font-size: 1.55rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.obs-mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem 1.5rem; }
+.obs-mini { margin: 0; }
+.obs-mini figcaption { font-family: "Barlow", sans-serif; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+.obs-tabela { font-family: "Barlow", sans-serif; font-size: 0.92rem; width: 100%; border-collapse: collapse; margin: 0.5rem 0 1rem; }
+.obs-tabela th, .obs-tabela td { padding: 0.35rem 0.6rem; border-bottom: 1px solid var(--obs-line); text-align: right; }
+.obs-tabela th:first-child, .obs-tabela td:first-child { text-align: left; }
+.obs-tabela thead th { font-weight: 600; color: var(--obs-muted); vertical-align: bottom; }
+.obs-fontes th, .obs-fontes td { text-align: left; white-space: nowrap; }
+.obs-fontes td:nth-child(4) { white-space: normal; min-width: 11rem; }
+.obs-lista-analises { list-style: none; padding: 0; }
+.obs-lista-analises li { padding: 0.4rem 0; border-bottom: 1px solid var(--obs-line); }
+.obs-lista-analises .obs-ui { color: var(--obs-muted); font-size: 0.9rem; margin-left: 0.5rem; }
+.obs-clubes-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: 0.7rem; max-width: 1100px; margin: 1rem auto 2rem; padding: 0 1rem; }
+.obs-clube-card {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 0.8rem; align-items: center;
+  padding: 0.7rem 0.9rem; border: 1px solid var(--obs-line); border-radius: 8px; text-decoration: none; color: var(--obs-ink);
+}
+.obs-clube-card:hover { border-color: var(--obs-field); }
+.obs-clube-card .obs-medalhao { grid-row: 1 / span 2; }
+.obs-clube-card-nome { font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 1.2rem; line-height: 1.1; }
+.obs-clube-card-anos { font-size: 0.85rem; color: var(--obs-muted); }
+.obs-editorias { color: var(--obs-muted); margin-bottom: 1rem; }
+
+// ---------- Análises: rodapé, três pontos, correção ----------
+.obs-rodape-analise { border-top: 1px solid var(--obs-line); margin-top: 2.5rem; padding-top: 1rem; font-size: 0.92rem; color: var(--obs-muted); }
+.obs-tres-pontos { background: var(--obs-panel); border-radius: 6px; padding: 0.8rem 1rem 0.8rem 1.4rem; margin: 1.2rem 0; }
+.obs-tres-pontos ul { margin: 0; }
+.obs-correcao { border-left: 4px solid var(--obs-debit); padding: 0.6rem 1rem; margin: 1.5rem 0; background: var(--obs-panel); }
+@media (max-width: 600px) { .obs-clube-cab { gap: 0.8rem; } .obs-medalhao { width: 3.6rem; height: 3.6rem; font-size: 1.2rem; } }
+.obs-demo-flag {
+  display: inline-block;
+  margin-top: 1.5rem;
+  background: var(--obs-flag);
+  color: #1A2421;
+  font-family: "Barlow", sans-serif;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  font-size: 0.95rem;
+}
+
+// ---------- Avisos ----------
+.obs-aviso {
+  border-left: 4px solid var(--obs-flag);
+  background: var(--obs-panel);
+  padding: 0.8rem 1rem;
+  margin: 1.2rem 0;
+  font-size: 0.98rem;
+}
+
+// ---------- Painel ----------
+.obs-painel form, .obs-painel .observablehq form { font-family: "Barlow", sans-serif; }
+.obs-painel { margin-bottom: 2.5rem; }
+.obs-painel figure { margin: 0.5rem 0 1.5rem; }
+.obs-painel svg, .obs-painel figure { background: transparent !important; }
+.obs-painel svg text { font-family: "Barlow", sans-serif; }
+.obs-negativo { color: var(--obs-debit); }
+.obs-downloads a { margin-right: 1.2rem; font-family: "Barlow", sans-serif; font-weight: 600; }
+
+// Seletores do painel
+.obs-seletor {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0.4rem 1rem;
+  align-items: start;
+  margin: 0 0 1rem;
+  font-family: "Barlow", system-ui, sans-serif;
+}
+.obs-seletor-rotulo { padding-top: 0.45rem; font-weight: 600; }
+.obs-seletor-corpo { min-width: 0; }
+.obs-seletor-linha { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.obs-seletor select, .obs-seletor input {
+  font: inherit;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--obs-line);
+  border-radius: 4px;
+  background: var(--obs-bg);
+  color: var(--obs-ink);
+  min-width: 0;
+}
+.obs-seletor select { flex: 1 1 18rem; max-width: 26rem; }
+.obs-seletor input { flex: 1 1 14rem; max-width: 20rem; }
+.obs-seletor input:disabled { opacity: 0.7; }
+.obs-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.obs-chips:empty { display: none; }
+.obs-chip {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font: inherit; font-size: 0.95rem;
+  padding: 0.2rem 0.6rem 0.2rem 0.45rem;
+  border: 1px solid var(--obs-line); border-radius: 999px;
+  background: var(--obs-panel); color: var(--obs-ink); cursor: pointer;
+}
+.obs-chip:hover .obs-chip-x { color: var(--obs-debit); }
+.obs-chip-cor { width: 0.8rem; height: 0.8rem; border-radius: 50%; flex: none; }
+.obs-chip-x { color: var(--obs-muted); font-size: 1.05rem; line-height: 1; }
+.obs-botao, .obs-acoes button {
+  font: inherit; font-size: 0.95rem; font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--obs-line); border-radius: 4px;
+  background: transparent; color: var(--obs-ink); cursor: pointer;
+}
+.obs-botao:hover, .obs-acoes button:hover { border-color: var(--obs-ink); }
+.obs-seletor-aviso { margin: 0.3rem 0 0; font-size: 0.9rem; color: var(--obs-debit); }
+.obs-seletor-aviso:empty { display: none; }
+.obs-indicador-nota, .obs-legenda-saf {
+  font-family: "Barlow", system-ui, sans-serif;
+  font-size: 0.95rem; color: var(--obs-muted); max-width: 68ch;
+}
+.obs-legenda-saf { margin-top: 0.2rem; }
+.obs-ranking-topo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-top: 1.5rem; }
+.obs-ranking-topo h3 { margin: 0; }
+.obs-acoes { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; font-family: "Barlow", sans-serif; }
+.obs-acoes a { font-weight: 600; }
+@media (max-width: 600px) {
+  .obs-seletor { grid-template-columns: 1fr; }
+  .obs-seletor-rotulo { padding-top: 0; }
+}
+
+// ---------- Glossário ----------
+dl.obs-glossario dt {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 1.4rem;
+}
+dl.obs-glossario dd { margin: 0.2rem 0 0; max-width: 68ch; }
+
+// ---------- Coluna ----------
+.obs-coluna-intro { font-size: 1.1rem; color: var(--obs-muted); max-width: 60ch; }
+.quarto-listing .listing-title { font-size: 1.5rem; font-weight: 600; }
+
+// Metadados e categorias do Quarto em caixa normal, não em maiúsculas
+.quarto-title-meta-heading, .quarto-category, .listing-categories .listing-category {
+  text-transform: none !important;
+  letter-spacing: 0;
+  font-family: "Barlow", sans-serif;
+}
+
+// ---------- Pesquisa ----------
+.obs-vazio { color: var(--obs-muted); font-style: italic; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+// Acesso à base completa
+.obs-acesso { font-family: "Barlow", system-ui, sans-serif; max-width: 68ch; }
+.obs-acesso p { margin-bottom: 0.7rem; }

@@ -1,0 +1,26 @@
+---
+title: "Sobre"
+description: "O que é Contas em Campo, quem faz e como falar com a gente."
+---
+
+Contas em Campo é um portal de análise das finanças do futebol brasileiro. A matéria-prima são as demonstrações financeiras que os próprios clubes publicam — de Sociedades Anônimas do Futebol e de associações. O trabalho é ler esses documentos com rigor contábil, padronizar o que é comparável, e contar o que os números dizem em linguagem que qualquer torcedor entenda.
+
+O produto público é a interpretação: análises, comparativos entre clubes e um retrato de cada um, sempre com a fonte à vista. A base integral que sustenta tudo isso é mantida em ambiente privado e documentada em [Como analisamos](como-analisamos.qmd).
+
+## O que você encontra aqui
+
+- **[Análises](analises/index.qmd)** — textos por editoria: contas dos clubes, SAFs e controle, dinheiro do jogo, mercado de atletas, dívidas e financiamento, e uma seção para quem está começando a ler balanço.
+- **[Compare](compare.qmd)** — até quatro clubes lado a lado, por tema, com os avisos que cada comparação pede.
+- **[Clubes](clubes/index.qmd)** — uma página por clube, com o retrato do último exercício, a evolução e o que ainda falta.
+
+## Independência
+
+O portal não tem patrocínio, não vende dados e não presta serviço a clubes, investidores ou financiadores analisados aqui. Se isso mudar, será dito nesta página antes de qualquer conteúdo relacionado ir ao ar. Os textos não são recomendação de investimento nem avaliação da gestão de ninguém.
+
+## Quem faz
+
+Contas em Campo é escrito e mantido por **Tiago Amadeu Braga de Lisboa**, contador (CRC-MG) e mestrando em Controladoria e Contabilidade na Universidade Federal de Minas Gerais (UFMG). A base de dados nasceu da pesquisa de mestrado.
+
+## Contato
+
+Correções, sugestões e pistas de documentos que ainda não localizamos: abra uma *issue* no [GitHub do projeto](https://github.com/contasemcampo/contasemcampo.github.io/issues).

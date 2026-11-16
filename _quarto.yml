@@ -1,0 +1,63 @@
+project:
+  type: website
+  output-dir: _site
+  # A versão em inglês é um projeto próprio (en/_quarto.yml), renderizado
+  # para _site/en. Ver CLAUDE.md e docs/MANUTENCAO.md no repositório de dados.
+  pre-render: scripts/gerar_clubes.py
+  render:
+    - "*.qmd"
+    - "analises/**/*.qmd"
+    - "clubes/**/*.qmd"
+    - "!clubes/_textos/"
+    - "!en/"
+  resources:
+    - dados/
+    - .nojekyll
+
+lang: pt-BR
+language:
+  listing-page-minutes-compact: "{0} min de leitura"
+  listing-page-category-all: "Todas as editorias"
+
+website:
+  title: "Contas em Campo"
+  site-url: "https://contasemcampo.github.io/"
+  description: "Análises, comparativos e números sobre as finanças do futebol brasileiro."
+  favicon: assets/favicon.svg
+  open-graph: true
+  page-navigation: false
+  navbar:
+    logo: assets/marca.svg
+    logo-alt: "Contas em Campo"
+    title: "Contas em Campo"
+    left:
+      - href: index.qmd
+        text: Início
+      - href: analises/index.qmd
+        text: Análises
+      - href: compare.qmd
+        text: Compare
+      - href: clubes/index.qmd
+        text: Clubes
+    right:
+      - href: en/index.html
+        text: English
+        aria-label: "Read in English"
+  page-footer:
+    left: |
+      [Sobre](sobre.html) · [Como analisamos](como-analisamos.html) · [Correções](correcoes.html) · [Glossário](glossario.html) · [Termos de uso](termos.html)
+    right: |
+      © 2026 Contas em Campo. Achou um erro? [Avise](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+format:
+  html:
+    from: markdown-tex_math_dollars
+    html-math-method: plain
+    respect-user-color-scheme: true
+    theme:
+      light: [cosmo, theme/base.scss, theme/claro.scss]
+      dark: [cosmo, theme/base.scss, theme/escuro.scss]
+    toc: false
+    smooth-scroll: true
+    link-external-newwindow: true
+    include-in-header: theme/fontes.html

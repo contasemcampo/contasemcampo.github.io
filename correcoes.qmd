@@ -1,0 +1,22 @@
+---
+title: "Correções e atualizações"
+description: "Todo valor corrigido depois de publicado, com o antes, o depois e o motivo."
+---
+
+```{ojs}
+//| echo: false
+erratas = d3.csv("dados/erratas.csv")
+versao = d3.json("dados/versao.json")
+```
+
+Erros encontrados depois da publicação são corrigidos numa versão nova da base e registrados aqui. As análises que citavam o número recebem uma nota. Para apontar um erro, [abra uma issue](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+```{ojs}
+//| echo: false
+erratas.length === 0
+  ? html`<p class="obs-vazio">Nenhuma correção publicada até o momento. Base ${versao.versao}, de ${versao.data}.</p>`
+  : Inputs.table(erratas.map(e => ({
+      Versão: e.versao, Tabela: e.tabela, "Clube e ano": e.clube_ano, Campo: e.campo,
+      Antes: e.antes, Depois: e.depois, Motivo: e.motivo_pt
+    })), {rows: 20, layout: "auto"})
+```

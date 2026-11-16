@@ -1,0 +1,14 @@
+---
+title: "Compare"
+description: "Como as contas do seu clube se comparam às dos rivais, por tema."
+---
+
+```{ojs}
+//| echo: false
+lang = "pt"
+base = "dados/"
+```
+
+[Escolha um tema, um indicador e até quatro clubes. Os valores são os publicados nas demonstrações financeiras de cada clube, em R$ milhões nominais, padronizados como descrito em [Como analisamos](como-analisamos.qmd). Campo vazio significa que não havia fonte, nunca zero.]{.obs-coluna-intro}
+
+{{< include _compare.qmd >}}

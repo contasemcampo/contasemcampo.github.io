@@ -1,0 +1,83 @@
+# Publica o site no GitHub Pages a cada push na branch main.
+#
+# Este repositório não guarda dados. O recorte público da base vem do
+# repositório privado contasemcampo/dados (pasta data/site), lido com o
+# secret DADOS_TOKEN: token fine-grained com permissão Contents: read só
+# naquele repositório. Sem o secret, o build para com mensagem e o site
+# anterior continua no ar.
+#
+# Para despublicar: Settings > Pages > Unpublish site.
+name: Publicar site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [base-atualizada]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir o acesso à base
+        env:
+          TOKEN: ${{ secrets.DADOS_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Secret DADOS_TOKEN ausente. Crie um token fine-grained com Contents: read em contasemcampo/dados e grave-o em Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      - name: Buscar o recorte público da base (repositório privado)
+        uses: actions/checkout@v4
+        with:
+          repository: contasemcampo/dados
+          token: ${{ secrets.DADOS_TOKEN }}
+          path: _dados_privado
+          sparse-checkout: data/site
+          sparse-checkout-cone-mode: true
+
+      - name: Colocar os dados no lugar
+        run: |
+          test -f _dados_privado/data/site/painel.csv || { echo "::error::data/site/painel.csv não encontrado no repositório de dados. Rode o exportador lá."; exit 1; }
+          mkdir -p dados
+          cp _dados_privado/data/site/* dados/
+          rm -rf _dados_privado
+          echo "Base $(python3 -c 'import json;print(json.load(open("dados/versao.json"))["versao"])')"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.8.25
+
+      - name: Gerar páginas e renderizar português e inglês
+        run: ./construir.sh
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

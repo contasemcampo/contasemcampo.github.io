@@ -1,0 +1,408 @@
+<!--
+  Comparador compartilhado por compare.qmd (pt) e en/compare.qmd (en).
+  A página que inclui este arquivo define, numa célula OJS:
+    lang = "pt" | "en"
+    base = caminho até a pasta dados/ ("dados/" ou "../dados/")
+
+  Os temas e indicadores vêm de dados/indicadores.csv, gerado pelo exportador
+  a partir das colunas publico/tema do dicionário. Para incluir ou tirar um
+  indicador, edite o dicionário no repositório de dados; este arquivo não muda.
+-->
+
+```{ojs}
+//| echo: false
+T = ({
+  pt: {
+    tema: "Tema", indicador: "Indicador", clubes: "Clubes",
+    adicionar: "Digite o nome de um clube", limpar: "Limpar",
+    remover: c => `Remover ${c}`, limite: n => `Até ${n} clubes por vez. Remova um para incluir outro.`,
+    ano: "Ano do ranking", anoCurto: "Ano",
+    nenhumClube: "Escolha ao menos um clube para ver o gráfico.",
+    semDado: "Nenhum dos clubes escolhidos tem esse número publicado. Campo vazio significa ausência de fonte, não zero.",
+    cobertura: (c, n) => `Publicado por ${c} clubes em ${n} exercícios.`,
+    legenda: "Ponto cheio: a entidade que publicou o balanço era SAF. Ponto vazado: associação ou outra forma jurídica. Linha interrompida: ano sem dado.",
+    ranking: a => `Todos os clubes em ${a}`,
+    top: n => `Comparar os ${n} primeiros`,
+    tabela: "Os números do gráfico",
+    copiarLink: "Copiar link desta comparação", copiado: "Link copiado",
+    versao: (v, d) => `Base ${v}, atualizada em ${d}.`,
+    avisos: "Antes de comparar",
+    avisoMisto: "A seleção mistura SAF e associação. Os formatos de balanço diferem; veja o que muda nas contas.",
+    avisoParcial: c => `${c}: ao menos um exercício cobre só parte do ano.`,
+    avisoComparativo: c => `${c}: ao menos um ano foi lido da coluna comparativa do balanço seguinte, não do documento do próprio ano.`,
+    avisoRessalva: c => `${c}: ao menos um balanço tem ressalva do auditor.`,
+    avisoDecisao: c => `${c}: ao menos um valor foi ajustado por decisão metodológica (ver Como analisamos).`,
+    relacionadas: "Análises sobre este tema",
+    nenhumaRelacionada: "Ainda não há análise publicada sobre este tema.",
+    oQueMuda: "SAF ou associação: o que muda nas contas",
+    oQueMudaHref: "analises/posts/2026-11-saf-ou-associacao/index.html"
+  },
+  en: {
+    tema: "Theme", indicador: "Indicator", clubes: "Clubs",
+    adicionar: "Type a club name", limpar: "Clear",
+    remover: c => `Remove ${c}`, limite: n => `Up to ${n} clubs at a time. Remove one to add another.`,
+    ano: "Ranking year", anoCurto: "Year",
+    nenhumClube: "Pick at least one club to see the chart.",
+    semDado: "None of the chosen clubs has published this figure. A blank means no source, not zero.",
+    cobertura: (c, n) => `Published by ${c} clubs in ${n} financial years.`,
+    legenda: "Filled dot: the reporting entity was an SAF. Hollow dot: association or other legal form. Broken line: year without data.",
+    ranking: a => `All clubs in ${a}`,
+    top: n => `Compare the top ${n}`,
+    tabela: "The numbers behind the chart",
+    copiarLink: "Copy link to this comparison", copiado: "Link copied",
+    versao: (v, d) => `Dataset ${v}, updated ${d}.`,
+    avisos: "Before comparing",
+    avisoMisto: "The selection mixes SAFs and associations. Their statements follow different formats; see what changes.",
+    avisoParcial: c => `${c}: at least one financial year covers only part of the year.`,
+    avisoComparativo: c => `${c}: at least one year was read from the comparative column of the next statement, not from that year's own document.`,
+    avisoRessalva: c => `${c}: at least one statement carries an auditor's qualification.`,
+    avisoDecisao: c => `${c}: at least one value was adjusted by a methodological decision (see How we analyse).`,
+    relacionadas: "Analyses on this theme",
+    nenhumaRelacionada: "No analysis published on this theme yet.",
+    oQueMuda: "SAF or association: what changes in the books",
+    oQueMudaHref: "../analises/posts/2026-11-saf-ou-associacao/index.html"
+  }
+})[lang]
+```
+
+```{ojs}
+//| echo: false
+dados = d3.csv(base + "painel.csv", d3.autoType)
+versao = d3.json(base + "versao.json")
+indicadoresCsv = d3.csv(base + "indicadores.csv")
+clubesJson = d3.json(base + "clubes.json")
+analisesJson = d3.json(base + "analises.json").catch(() => [])
+```
+
+```{ojs}
+//| echo: false
+MAX_CLUBES = 4
+loc = lang === "pt" ? "pt-BR" : "en-US"
+semAcento = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
+num = (v, casas) => v.toLocaleString(loc, {maximumFractionDigits: casas, minimumFractionDigits: 0})
+formatar = (v, f) => {
+  if (v === null || v === undefined || Number.isNaN(v)) return "—"
+  const pt = lang === "pt"
+  switch (f) {
+    case "rs": return (pt ? "R$ " : "BRL ") + num(v, 1) + (pt ? " mi" : " m")
+    case "rs_ponto": return (pt ? "R$ " : "BRL ") + num(v, 2) + (pt ? " mi por ponto" : " m per point")
+    case "fracao": return v.toLocaleString(loc, {style: "percent", maximumFractionDigits: 1})
+    case "pct": return num(v, 1) + "%"
+    case "x": return num(v, 2)
+    case "eur": return "€ " + num(v / 1e6, 1) + (pt ? " mi" : " m")
+    case "pessoas": return num(v, 0)
+    default: return num(v, 2)
+  }
+}
+nomeDe = new Map(clubesJson.map(c => [c.clube, c.nome]))
+slugDe = new Map(clubesJson.map(c => [c.clube, c.slug]))
+// Indicadores públicos com ao menos um valor na base
+indicadores = indicadoresCsv
+  .filter(d => dados.some(r => r[d.campo] !== null && r[d.campo] !== undefined))
+  .map(d => ({
+    campo: d.campo, tema: d.tema, temaOrdem: +d.tema_ordem, ordem: +d.ordem_tema, formato: d.formato,
+    temaRotulo: lang === "pt" ? d.tema_pt : d.tema_en,
+    pergunta: lang === "pt" ? d.pergunta_pt : d.pergunta_en,
+    rotulo: lang === "pt" ? d.rotulo_pt : d.rotulo_en,
+    descricao: lang === "pt" ? d.descricao_pt : d.description_en,
+    menorMelhor: d.menor_melhor === "S"
+  }))
+  .sort((a, b) => a.temaOrdem - b.temaOrdem || a.ordem - b.ordem)
+temas = Array.from(d3.group(indicadores, i => i.tema), ([id, itens]) => ({id, rotulo: itens[0].temaRotulo, pergunta: itens[0].pergunta, itens}))
+clubes = Array.from(new Set(dados.map(d => d.clube))).sort((a, b) => (nomeDe.get(a) ?? a).localeCompare(nomeDe.get(b) ?? b, "pt-BR"))
+anosTodos = Array.from(new Set(dados.map(d => d.ano))).sort((a, b) => a - b)
+porChave = new Map(dados.map(d => [`${d.clube}|${d.ano}`, d]))
+```
+
+```{ojs}
+//| echo: false
+params = new URLSearchParams(window.location.search)
+indicadorInicial = indicadores.find(i => i.campo === params.get("indicador"))
+  ?? indicadores.find(i => i.campo === "receita_rec") ?? indicadores[0]
+clubesIniciais = {
+  const daUrl = (params.get("clubes") || "").split(",")
+    .map(s => clubes.find(c => slugDe.get(c) === s || c === s)).filter(Boolean).slice(0, MAX_CLUBES)
+  if (daUrl.length) return daUrl
+  const ultimo = d3.max(dados, d => d.ano)
+  return dados.filter(d => d.ano === ultimo && d.receita_rec !== null)
+    .sort((a, b) => b.receita_rec - a.receita_rec).slice(0, 3).map(d => d.clube)
+}
+estado = ({ano: +params.get("ano") || null})
+```
+
+```{ojs}
+//| echo: false
+// Tema e indicador: abas de tema (uma pergunta cada) e um menu dentro do tema
+function seletorTemaIndicador(temas, inicial) {
+  let tema = temas.find(t => t.id === inicial.tema) ?? temas[0]
+  const abas = html`<div class="obs-temas" role="tablist"></div>`
+  const pergunta = html`<p class="obs-tema-pergunta"></p>`
+  const sel = html`<select aria-label=${T.indicador}></select>`
+  const form = html`<div class="obs-compare-topo">${abas}${pergunta}
+    <div class="obs-seletor"><label class="obs-seletor-rotulo">${T.indicador}</label>
+    <div class="obs-seletor-corpo"><div class="obs-seletor-linha">${sel}</div></div></div></div>`
+  form.value = inicial
+  function emitir() { form.dispatchEvent(new Event("input", {bubbles: true})) }
+  function desenharAbas() {
+    abas.replaceChildren(...temas.map(t => {
+      const b = html`<button type="button" role="tab" class="obs-tema" aria-selected=${t.id === tema.id}>${t.rotulo}</button>`
+      b.onclick = () => { tema = t; desenharAbas(); montarMenu(); form.value = tema.itens[0]; emitir() }
+      return b
+    }))
+    pergunta.textContent = tema.pergunta
+  }
+  function montarMenu() {
+    sel.replaceChildren(...tema.itens.map(i => new Option(i.rotulo, i.campo)))
+    if (tema.itens.some(i => i.campo === form.value?.campo)) sel.value = form.value.campo
+  }
+  sel.addEventListener("input", e => e.stopPropagation())
+  sel.addEventListener("change", e => { e.stopPropagation(); form.value = tema.itens.find(i => i.campo === sel.value); emitir() })
+  desenharAbas(); montarMenu()
+  return form
+}
+```
+
+```{ojs}
+//| echo: false
+function seletorClubes(opcoes, inicial, max) {
+  let selecionados = inicial.map((clube, i) => ({clube, slot: i}))
+  const lista = DOM.uid("clubes")
+  const entrada = html`<input type="text" list=${lista.id} autocomplete="off" aria-label=${T.adicionar}>`
+  const limpar = html`<button type="button" class="obs-botao">${T.limpar}</button>`
+  const chips = html`<div class="obs-chips" role="list"></div>`
+  const aviso = html`<p class="obs-seletor-aviso" aria-live="polite"></p>`
+  const form = html`<div class="obs-seletor">
+    <span class="obs-seletor-rotulo">${T.clubes}</span>
+    <div class="obs-seletor-corpo">${chips}<div class="obs-seletor-linha">${entrada}${limpar}</div>${aviso}</div>
+    <datalist id=${lista.id}>${opcoes.map(o => html`<option value=${nomeDe.get(o) ?? o}>`)}</datalist>
+  </div>`
+  function emitir() { form.value = selecionados.slice(); desenhar(); form.dispatchEvent(new Event("input", {bubbles: true})) }
+  function desenhar() {
+    chips.replaceChildren(...selecionados.map(s => {
+      const b = html`<button type="button" class="obs-chip" role="listitem" aria-label=${T.remover(nomeDe.get(s.clube) ?? s.clube)}>
+        <span class="obs-chip-cor"></span>${nomeDe.get(s.clube) ?? s.clube}<span aria-hidden="true" class="obs-chip-x">×</span></button>`
+      b.querySelector(".obs-chip-cor").style.background = `var(--obs-s${s.slot + 1})`
+      b.onclick = () => { selecionados = selecionados.filter(x => x.clube !== s.clube); aviso.textContent = ""; emitir() }
+      return b
+    }))
+    const cheio = selecionados.length >= max
+    entrada.disabled = cheio
+    entrada.placeholder = cheio ? T.limite(max) : T.adicionar
+  }
+  function adicionar(texto) {
+    const q = semAcento(texto.trim())
+    const nome = opcoes.find(o => semAcento(nomeDe.get(o) ?? o) === q || semAcento(o) === q)
+    if (!nome) return false
+    entrada.value = ""
+    if (selecionados.some(s => s.clube === nome)) return true
+    if (selecionados.length >= max) { aviso.textContent = T.limite(max); return true }
+    const usados = new Set(selecionados.map(s => s.slot))
+    selecionados.push({clube: nome, slot: d3.range(max).find(i => !usados.has(i))})
+    aviso.textContent = ""
+    emitir()
+    return true
+  }
+  entrada.addEventListener("input", e => { e.stopPropagation(); adicionar(entrada.value) })
+  entrada.addEventListener("keydown", e => {
+    if (e.key !== "Enter") return
+    e.preventDefault()
+    const q = semAcento(entrada.value.trim())
+    if (!q || adicionar(entrada.value)) return
+    const parecido = opcoes.find(o => semAcento(nomeDe.get(o) ?? o).startsWith(q)) ?? opcoes.find(o => semAcento(nomeDe.get(o) ?? o).includes(q))
+    if (parecido) adicionar(parecido)
+  })
+  limpar.onclick = () => { selecionados = []; aviso.textContent = ""; emitir() }
+  form.definir = nomes => { selecionados = nomes.slice(0, max).map((clube, i) => ({clube, slot: i})); aviso.textContent = ""; emitir() }
+  form.value = selecionados.slice()
+  desenhar()
+  return form
+}
+```
+
+::: {.obs-painel}
+
+```{ojs}
+//| echo: false
+viewof indicador = seletorTemaIndicador(temas, indicadorInicial)
+```
+
+```{ojs}
+//| echo: false
+viewof selecao = seletorClubes(clubes, clubesIniciais, MAX_CLUBES)
+```
+
+```{ojs}
+//| echo: false
+comDado = dados.filter(d => d[indicador.campo] !== null && d[indicador.campo] !== undefined)
+html`<p class="obs-indicador-nota"><strong>${indicador.rotulo}.</strong> ${indicador.descricao}. ${T.cobertura(new Set(comDado.map(d => d.clube)).size, comDado.length)}</p>`
+```
+
+```{ojs}
+//| echo: false
+grafico = {
+  if (selecao.length === 0) return html`<p class="obs-aviso">${T.nenhumClube}</p>`
+  const campo = indicador.campo
+  const pontos = selecao.flatMap(s => anosTodos.map(ano => {
+    const r = porChave.get(`${s.clube}|${ano}`)
+    const v = r ? r[campo] : null
+    return {clube: s.clube, nome: nomeDe.get(s.clube) ?? s.clube, slot: s.slot, ano, valor: v ?? null, saf: r ? r.saf_validada === 1 : false}
+  }))
+  const validos = pontos.filter(p => p.valor !== null)
+  if (validos.length === 0) return html`<p class="obs-aviso">${T.semDado}</p>`
+  const anosVisiveis = d3.range(d3.min(validos, p => p.ano), d3.max(validos, p => p.ano) + 1)
+  const grade = pontos.filter(p => anosVisiveis.includes(p.ano))
+  const ultimos = d3.rollups(validos, v => v.sort((a, b) => b.ano - a.ano)[0], p => p.clube).map(([, p]) => ({...p}))
+  const [ymin, ymax] = d3.extent(validos, p => p.valor)
+  const folga = Math.max((ymax - ymin) * 0.07, Math.abs(ymax) * 1e-6 || 1e-6)
+  d3.groups(ultimos, p => p.ano).forEach(([, grupo]) => {
+    grupo.sort((a, b) => a.valor - b.valor)
+    grupo.forEach((p, i) => { p.yRotulo = i && p.valor - grupo[i - 1].yRotulo < folga ? grupo[i - 1].yRotulo + folga : p.valor })
+  })
+  const cor = p => `var(--obs-s${p.slot + 1})`
+  return Plot.plot({
+    title: indicador.rotulo,
+    width: Math.min(width, 900),
+    height: width < 600 ? 300 : 360,
+    marginLeft: 82,
+    marginRight: width < 600 ? 92 : 130,
+    x: {label: null, tickFormat: String, ticks: anosVisiveis, domain: [anosVisiveis[0], anosVisiveis[anosVisiveis.length - 1]], inset: 12},
+    y: {label: null, grid: true, nice: true, tickFormat: v => formatar(v, indicador.formato), reverse: indicador.menorMelhor},
+    marks: [
+      Plot.ruleY([0], {stroke: "currentColor", strokeOpacity: 0.4}),
+      ...selecao.map(s => Plot.line(grade.filter(p => p.clube === s.clube),
+        {x: "ano", y: "valor", stroke: cor(s), strokeWidth: 2.2, defined: p => p.valor !== null})),
+      Plot.dot(validos, {x: "ano", y: "valor", r: 4.5, strokeWidth: 2, stroke: cor, fill: p => p.saf ? cor(p) : "var(--obs-bg)"}),
+      Plot.text(ultimos, {x: "ano", y: "yRotulo", text: "nome", dx: 10, textAnchor: "start", fill: "currentColor", fontSize: 12}),
+      Plot.tip(validos, Plot.pointer({x: "ano", y: "valor", title: p => `${p.nome}, ${p.ano}\n${formatar(p.valor, indicador.formato)}`}))
+    ]
+  })
+}
+```
+
+```{ojs}
+//| echo: false
+html`<p class="obs-legenda-saf">${T.legenda}</p>`
+```
+
+```{ojs}
+//| echo: false
+// Avisos de comparabilidade, calculados sobre as linhas dos clubes escolhidos
+avisosComparabilidade = {
+  const linhas = selecao.flatMap(s => dados.filter(d => d.clube === s.clube))
+  if (!linhas.length) return html``
+  const nome = c => nomeDe.get(c) ?? c
+  const itens = []
+  const regimes = new Set(linhas.map(d => d.regime_entidade).filter(Boolean))
+  if (regimes.has("SAF") && regimes.size > 1)
+    itens.push(html`<li>${T.avisoMisto} <a href=${T.oQueMudaHref}>${T.oQueMuda}</a>.</li>`)
+  const por = (teste, msg) => {
+    const quem = Array.from(new Set(linhas.filter(teste).map(d => nome(d.clube))))
+    if (quem.length) itens.push(html`<li>${msg(quem.join(", "))}</li>`)
+  }
+  por(d => typeof d.exercicio_parcial === "string" && d.exercicio_parcial.startsWith("S"), T.avisoParcial)
+  por(d => typeof d.fonte_exercicio === "string" && /comparativ/i.test(d.fonte_exercicio), T.avisoComparativo)
+  por(d => d.tem_ressalva === "S", T.avisoRessalva)
+  por(d => d.tem_decisao === "S", T.avisoDecisao)
+  if (!itens.length) return html``
+  return html`<div class="obs-aviso obs-comparabilidade"><strong>${T.avisos}</strong><ul>${itens}</ul></div>`
+}
+```
+
+```{ojs}
+//| echo: false
+anosDoIndicador = Array.from(new Set(comDado.map(d => d.ano))).sort((a, b) => b - a)
+viewof ano = Inputs.select(anosDoIndicador, {
+  label: T.ano, format: String,
+  value: anosDoIndicador.includes(estado.ano) ? estado.ano : anosDoIndicador[0]
+})
+```
+
+```{ojs}
+//| echo: false
+anoGuardado = { estado.ano = ano; return ano }
+```
+
+```{ojs}
+//| echo: false
+recorte = comDado.filter(d => d.ano === ano)
+  .sort((a, b) => indicador.menorMelhor ? a[indicador.campo] - b[indicador.campo] : b[indicador.campo] - a[indicador.campo])
+slotDe = new Map(selecao.map(s => [s.clube, s.slot]))
+html`<div class="obs-ranking-topo">
+  <h3>${T.ranking(ano)}: ${indicador.rotulo.toLowerCase()}</h3>
+  ${Object.assign(html`<button type="button" class="obs-botao">${T.top(MAX_CLUBES)}</button>`,
+    {onclick: () => viewof selecao.definir(recorte.slice(0, MAX_CLUBES).map(d => d.clube))})}
+</div>`
+```
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  width: Math.min(width, 900),
+  height: Math.max(160, recorte.length * 22 + 40),
+  marginLeft: 130,
+  x: {label: null, grid: true, nice: true, tickFormat: v => formatar(v, indicador.formato)},
+  y: {label: null, domain: recorte.map(d => d.clube), tickFormat: c => nomeDe.get(c) ?? c},
+  marks: [
+    Plot.ruleX([0], {stroke: "currentColor", strokeOpacity: 0.4}),
+    Plot.barX(recorte, {
+      y: "clube", x: indicador.campo, insetTop: 1, insetBottom: 1,
+      fill: d => slotDe.has(d.clube) ? `var(--obs-s${slotDe.get(d.clube) + 1})` : "var(--obs-muted)",
+      fillOpacity: d => slotDe.has(d.clube) ? 1 : 0.35
+    }),
+    Plot.tip(recorte, Plot.pointerY({y: "clube", x: indicador.campo,
+      title: d => `${nomeDe.get(d.clube) ?? d.clube}: ${formatar(d[indicador.campo], indicador.formato)}`}))
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+html`<h3>${T.tabela}</h3>`
+```
+
+```{ojs}
+//| echo: false
+tabelaValores = {
+  const linhas = anosTodos.filter(a => selecao.some(s => porChave.get(`${s.clube}|${a}`)?.[indicador.campo] != null))
+  if (!linhas.length) return html``
+  return html`<table class="obs-tabela"><thead><tr><th>${T.anoCurto}</th>${selecao.map(s => html`<th>${nomeDe.get(s.clube) ?? s.clube}</th>`)}</tr></thead>
+    <tbody>${linhas.map(a => html`<tr><th>${a}</th>${selecao.map(s => html`<td>${formatar(porChave.get(`${s.clube}|${a}`)?.[indicador.campo], indicador.formato)}</td>`)}</tr>`)}</tbody></table>`
+}
+```
+
+```{ojs}
+//| echo: false
+enderecoAtualizado = {
+  const p = new URLSearchParams(window.location.search)
+  p.set("indicador", indicador.campo)
+  p.set("clubes", selecao.map(s => slugDe.get(s.clube) ?? s.clube).join(","))
+  p.set("ano", ano)
+  history.replaceState(null, "", `${window.location.pathname}?${p.toString()}${window.location.hash}`)
+  return p.toString()
+}
+```
+
+```{ojs}
+//| echo: false
+acoes = {
+  const copiar = html`<button type="button" class="obs-botao">${T.copiarLink}</button>`
+  copiar.onclick = async () => {
+    try { await navigator.clipboard.writeText(window.location.href); copiar.textContent = T.copiado }
+    catch { copiar.textContent = window.location.href }
+  }
+  return html`<p class="obs-acoes">${copiar}<span class="obs-ui obs-versao">${T.versao(versao.versao, versao.data)}</span></p>`
+}
+```
+
+```{ojs}
+//| echo: false
+relacionadas = {
+  const lista = (analisesJson || []).filter(a => a.lang === lang && (a.temas || []).includes(indicador.tema))
+    .sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5)
+  return html`<section class="obs-relacionadas"><h3>${T.relacionadas}</h3>
+    ${lista.length ? html`<ul>${lista.map(a => html`<li><a href=${a.href}>${a.title}</a> <span class="obs-ui">${a.date}</span></li>`)}</ul>`
+                  : html`<p class="obs-vazio">${T.nenhumaRelacionada}</p>`}</section>`
+}
+```
+
+:::

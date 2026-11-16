@@ -1,0 +1,57 @@
+# English edition. Rendered separately into ../_site/en (see ../construir.sh).
+project:
+  type: website
+  output-dir: ../_site/en
+  render:
+    - "*.qmd"
+    - "analyses/**/*.qmd"
+    - "clubs/**/*.qmd"
+    - "!clubs/_texts/"
+
+lang: en
+language:
+  listing-page-minutes-compact: "{0} min read"
+  listing-page-category-all: "All sections"
+
+website:
+  title: "Contas em Campo"
+  site-url: "https://contasemcampo.github.io/en/"
+  description: "Analysis, comparisons and figures on the finances of Brazilian football."
+  favicon: ../assets/favicon.svg
+  open-graph: true
+  page-navigation: false
+  navbar:
+    logo: ../assets/marca.svg
+    logo-alt: "Contas em Campo"
+    title: "Contas em Campo"
+    left:
+      - href: index.qmd
+        text: Home
+      - href: analyses/index.qmd
+        text: Analyses
+      - href: compare.qmd
+        text: Compare
+      - href: clubs/index.qmd
+        text: Clubs
+    right:
+      - href: ../index.html
+        text: Português
+        aria-label: "Ler em português"
+  page-footer:
+    left: |
+      [About](about.html) · [How we analyse](how-we-analyse.html) · [Corrections](corrections.html) · [Glossary](glossary.html) · [Terms of use](terms.html)
+    right: |
+      © 2026 Contas em Campo. Found an error? [Tell us](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+format:
+  html:
+    from: markdown-tex_math_dollars
+    html-math-method: plain
+    respect-user-color-scheme: true
+    theme:
+      light: [cosmo, ../theme/base.scss, ../theme/claro.scss]
+      dark: [cosmo, ../theme/base.scss, ../theme/escuro.scss]
+    toc: false
+    smooth-scroll: true
+    link-external-newwindow: true
+    include-in-header: ../theme/fontes.html

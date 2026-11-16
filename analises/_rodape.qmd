@@ -1,0 +1,3 @@
+::: {.obs-rodape-analise .obs-ui}
+**Fontes e critérios.** Os números citados vêm das demonstrações financeiras publicadas pelos clubes, padronizadas na base Contas em Campo, versão {{< meta base >}}. Como cada valor é lido, conferido e ajustado está em [Como analisamos](../../../como-analisamos.qmd). Erros encontrados depois da publicação entram em [Correções](../../../correcoes.qmd) e são anotados aqui.
+:::

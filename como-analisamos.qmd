@@ -1,0 +1,72 @@
+---
+title: "Como analisamos"
+description: "De onde vêm os números, como são conferidos e padronizados, o que não mostram e como corrigimos."
+toc: true
+---
+
+```{ojs}
+//| echo: false
+lang = "pt"
+base = "dados/"
+versao = d3.json(base + "versao.json")
+indicadoresCsv = d3.csv(base + "indicadores.csv")
+```
+
+Tudo que o portal publica sai das demonstrações financeiras divulgadas pelos próprios clubes: balanço patrimonial, demonstração do resultado, demonstração dos fluxos de caixa, notas explicativas e relatório do auditor independente. Esta página explica o caminho entre o documento e o número que aparece numa análise.
+
+## Fontes
+
+Demonstrações publicadas pelos clubes em seus sites, portais de transparência ou diários oficiais, dos exercícios de 2020 em diante. A moldura são os clubes que disputaram as Séries A, B e C do Campeonato Brasileiro em cada ano. Nem todo clube publica, e nem todo documento publicado é localizável; a página de cada clube diz quais exercícios faltam.
+
+Quando o documento do próprio ano não foi localizado mas o balanço do ano seguinte traz a coluna comparativa, usamos a coluna comparativa e marcamos a origem. O Compare avisa quando isso acontece com um clube escolhido.
+
+## Como cada valor é lido
+
+1. **Extração.** Cada valor é lido no documento original, com registro da página e do trecho de onde saiu.
+2. **Conferência.** Uma segunda leitura, independente da primeira, confere campo a campo contra a fonte.
+3. **Reconciliação.** Todo balanço é testado: ativo = passivo circulante + passivo não circulante + patrimônio líquido. Os poucos casos que não fecham ficam documentados.
+4. **Decisões metodológicas.** Quando um valor exige escolha — um item classificado de forma incomum, uma reapresentação, um evento não recorrente —, a decisão é numerada, registrada com o critério e a evidência, e ligada às células que afeta. O Compare e as páginas de clubes sinalizam quando um valor foi ajustado assim.
+
+## Os indicadores publicados {#indicadores}
+
+O Compare e as páginas de clubes mostram um conjunto escolhido de indicadores, organizado pelas perguntas que um leitor faz. Cada um está definido abaixo. Valores monetários em R$ milhões nominais, sem correção pela inflação.
+
+```{ojs}
+//| echo: false
+Inputs.table(indicadoresCsv.map(d => ({
+  Tema: d.tema_pt, Indicador: d.rotulo_pt, Definição: d.descricao_pt
+})), {rows: 40, layout: "auto"})
+```
+
+Alguns critérios que valem para todos:
+
+- **Receita comparável** exclui a negociação de atletas e itens de liga, para que a comparação entre clubes e anos não dependa de uma venda grande num ano específico.
+- **Dívida identificada** soma as rubricas do passivo que são dívida de fato — empréstimos, parcelamentos fiscais, acordos trabalhistas e cíveis, obrigações com clubes por transferências. Receita diferida, provisões para contingências e adiantamentos ficam de fora. Por isso ela cobre, na mediana, cerca de 94% do passivo total, e menos em alguns clubes.
+- **Gastos com pessoal** podem ou não incluir o quadro administrativo, conforme o que o clube detalha; a base registra qual é o caso.
+- **Campo vazio significa ausência de fonte, nunca zero.**
+
+## O que os números não mostram
+
+- Um balanço é uma fotografia do fim do ano. Não mostra o que aconteceu no meio.
+- Associação e SAF publicam em formatos diferentes, e no ano da transformação a associação pode consolidar a SAF, ou o exercício da SAF pode cobrir só alguns meses. [SAF ou associação: o que muda nas contas](analises/posts/2026-11-saf-ou-associacao/index.qmd) explica isso em detalhe.
+- O que não está em nota explicativa não está na base. Clubes que publicam pouco aparecem com menos indicadores — e isso, por si, já é informação.
+- Nada aqui é previsão, recomendação de investimento ou julgamento da gestão de um clube.
+
+## Correções
+
+Erros acontecem. Quando um valor publicado muda, a correção entra numa versão nova da base, fica registrada em [Correções](correcoes.qmd) com o valor anterior, o novo e o motivo, e as análises que citavam o número recebem uma nota. Cada análise informa a versão da base em que se apoia.
+
+## Versão da base
+
+```{ojs}
+//| echo: false
+html`<p class="obs-ui">Versão atual: <strong>${versao.versao}</strong>, de ${versao.data}.${versao.doi ? html` DOI do depósito: <a href="https://doi.org/${versao.doi}">${versao.doi}</a>.` : ""}</p>`
+```
+
+A base é versionada: MAIOR muda estrutura; MENOR acrescenta clubes, anos ou campos; CORREÇÃO ajusta valores.
+
+## Uso acadêmico da base completa {#acesso}
+
+Além dos indicadores publicados aqui, a base integral reúne a rastreabilidade de cada valor, as decisões metodológicas, as aberturas de receita e de pessoal, dívidas, AFAC, partes relacionadas, reapresentações, desempenho esportivo e as conferências de cada etapa. Ela é depositada em repositório acadêmico com acesso restrito, cedida para pesquisa não comercial mediante solicitação justificada, com citação. Pesquisadores podem pedir pelo [GitHub do projeto](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+> LISBOA, Tiago Amadeu Braga de. **Demonstrações financeiras de clubes de futebol brasileiros: base em painel**. 2026.

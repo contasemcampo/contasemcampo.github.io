@@ -1,0 +1,3 @@
+::: {.obs-rodape-analise .obs-ui}
+**Sources and criteria.** The figures quoted come from the financial statements published by the clubs, standardised in the Contas em Campo dataset, version {{< meta base >}}. How each value is read, checked and adjusted is described in [How we analyse](../../../how-we-analyse.qmd). Errors found after publication are logged in [Corrections](../../../corrections.qmd) and noted here.
+:::

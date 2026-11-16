@@ -1,0 +1,4 @@
+# Options shared by all analyses
+author: "Contas em Campo"
+toc: false
+title-block-categories: true

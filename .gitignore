@@ -1,0 +1,16 @@
+# Saída do Quarto
+/_site/
+/.quarto/
+/en/.quarto/
+*_files/
+**/*.quarto_ipynb
+
+# Gerado no build — nunca versionado neste repositório público
+/dados/
+/clubes/*/
+!/clubes/_textos/
+/en/clubs/*/
+!/en/clubs/_texts/
+/_dados_privado/
+/clubes/index.qmd
+/en/clubs/index.qmd

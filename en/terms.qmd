@@ -1,0 +1,26 @@
+---
+title: "Terms of use"
+description: "What you may do with the texts and figures published here."
+---
+
+## Texts and analyses
+
+Texts published from **15 November 2026** onwards are authored by Contas em Campo, all rights reserved. Short quotations with a link to the source page are welcome. Full reproduction, translation or commercial use require prior permission: write through the [project's GitHub](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+Texts published **before that date** were released under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) and remain under it.
+
+## Figures
+
+The values shown in Compare and on the club pages are those the clubs published in their financial statements, standardised by Contas em Campo. You may quote and reproduce them in articles, classes and reporting, crediting the source: *Contas em Campo, from the clubs' financial statements*. Bulk extraction of the site's files and their redistribution as a dataset are not authorised.
+
+## Full dataset
+
+The full dataset is shared for non-commercial academic research on request, under the terms in [How we analyse](how-we-analyse.qmd#acesso), with citation.
+
+## Accuracy and liability
+
+Figures are checked against the source and corrected when an error is found ([Corrections](corrections.qmd)). They may still contain errors, and they reflect what each club published and how. Nothing on this site is investment advice or an assessment of any club's management.
+
+## Privacy
+
+The site collects no personal data, sets no cookies of its own and has no forms. Web fonts are loaded from Google Fonts, which may log the request under its own policy.

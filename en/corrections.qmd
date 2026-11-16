@@ -1,0 +1,22 @@
+---
+title: "Corrections and updates"
+description: "Every value corrected after publication, with the before, the after and the reason."
+---
+
+```{ojs}
+//| echo: false
+erratas = d3.csv("../dados/erratas.csv")
+versao = d3.json("../dados/versao.json")
+```
+
+Errors found after publication are fixed in a new dataset version and logged here. Analyses that quoted the number get a note. To report an error, [open an issue](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+```{ojs}
+//| echo: false
+erratas.length === 0
+  ? html`<p class="obs-vazio">No corrections published so far. Dataset ${versao.versao}, ${versao.data}.</p>`
+  : Inputs.table(erratas.map(e => ({
+      Version: e.versao, Table: e.tabela, "Club and year": e.clube_ano, Field: e.campo,
+      Before: e.antes, After: e.depois, Reason: e.reason_en
+    })), {rows: 20, layout: "auto"})
+```

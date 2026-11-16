@@ -1,0 +1,26 @@
+---
+title: "Termos de uso"
+description: "O que pode ser feito com os textos e os números publicados aqui."
+---
+
+## Textos e análises
+
+Os textos publicados a partir de **15 de novembro de 2026** são de autoria de Contas em Campo e têm todos os direitos reservados. Citações curtas, com link para a página de origem, são bem-vindas. Reprodução integral, tradução ou uso comercial dependem de autorização prévia: escreva pelo [GitHub do projeto](https://github.com/contasemcampo/contasemcampo.github.io/issues).
+
+Os textos publicados **antes dessa data** foram divulgados sob a licença [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br) e continuam sob ela.
+
+## Números
+
+Os valores exibidos no Compare e nas páginas de clubes são os publicados pelos próprios clubes em suas demonstrações financeiras, padronizados por Contas em Campo. Você pode citá-los e reproduzi-los em textos, aulas e reportagens, indicando a fonte: *Contas em Campo, a partir das demonstrações financeiras dos clubes*. A extração em massa dos arquivos do site e a redistribuição deles como base de dados não estão autorizadas.
+
+## Base completa
+
+A base integral é cedida para pesquisa acadêmica não comercial, mediante solicitação, nos termos descritos em [Como analisamos](como-analisamos.qmd#acesso), com citação.
+
+## Precisão e responsabilidade
+
+Os números são conferidos contra a fonte e corrigidos quando um erro é encontrado ([Correções](correcoes.qmd)). Ainda assim, podem conter erros, e refletem o que cada clube publicou e como publicou. Nada neste site é recomendação de investimento ou avaliação da gestão de qualquer clube.
+
+## Privacidade
+
+O site não coleta dados pessoais, não usa cookies próprios e não tem formulários. As fontes tipográficas são carregadas do Google Fonts, que pode registrar o acesso conforme a própria política.

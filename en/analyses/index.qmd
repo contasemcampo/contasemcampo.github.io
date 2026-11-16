@@ -1,0 +1,15 @@
+---
+title: "Analyses"
+description: "Club finances explained: what the statements reveal and what they leave out."
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: cloud
+  sort-ui: false
+  filter-ui: true
+  fields: [date, title, description, categories, reading-time]
+  feed: true
+---
+
+[Plain-language pieces grounded in the figures the clubs themselves publish. Most are written in Portuguese first ([read them all](../analises/index.html)); selected ones are translated here. Each piece states the dataset version it relies on, what the numbers do not show, and where to check the sources.]{.obs-coluna-intro}

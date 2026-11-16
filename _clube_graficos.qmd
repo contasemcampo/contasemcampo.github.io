@@ -1,0 +1,49 @@
+<!--
+  Gráficos da página de um clube. A página define, numa célula OJS:
+    lang = "pt" | "en"; base = "../../dados/" (pt) ou "../../../dados/" (en)
+    clubeAtual = nome do clube como está na base (ex.: "Atletico-MG")
+-->
+
+```{ojs}
+//| echo: false
+dados = d3.csv(base + "painel.csv", d3.autoType)
+indicadoresCsv = d3.csv(base + "indicadores.csv")
+loc = lang === "pt" ? "pt-BR" : "en-US"
+fmt = (v, f) => {
+  if (v === null || v === undefined || Number.isNaN(v)) return "—"
+  const n = (x, c) => x.toLocaleString(loc, {maximumFractionDigits: c, minimumFractionDigits: 0})
+  const pt = lang === "pt"
+  if (f === "fracao") return v.toLocaleString(loc, {style: "percent", maximumFractionDigits: 1})
+  if (f === "pct") return n(v, 1) + "%"
+  if (f === "x" || f === "num") return n(v, 2)
+  if (f === "pessoas") return n(v, 0)
+  return (pt ? "R$ " : "BRL ") + n(v, 1) + (pt ? " mi" : " m")
+}
+CAMPOS = ["receita_rec", "lucro_liquido", "patrimonio_liq", "divida_identificada_total", "caixa_final", "pessoal"]
+serie = dados.filter(d => d.clube === clubeAtual).sort((a, b) => a.ano - b.ano)
+rotulos = new Map(indicadoresCsv.map(d => [d.campo, {rotulo: lang === "pt" ? d.rotulo_pt : d.rotulo_en, formato: d.formato}]))
+```
+
+```{ojs}
+//| echo: false
+html`<div class="obs-mini-grid">${CAMPOS.filter(c => serie.some(d => d[c] !== null && d[c] !== undefined)).map(campo => {
+  const pts = serie.map(d => ({ano: d.ano, valor: d[campo] ?? null, saf: d.saf_validada === 1}))
+  const validos = pts.filter(p => p.valor !== null)
+  const info = rotulos.get(campo) ?? {rotulo: campo, formato: "rs"}
+  return html`<figure class="obs-mini">
+    <figcaption>${info.rotulo}</figcaption>
+    ${Plot.plot({
+      width: Math.min(width, 340), height: 180, marginLeft: 74, marginRight: 14, marginTop: 8, marginBottom: 24,
+      x: {label: null, tickFormat: String, ticks: pts.map(p => p.ano)},
+      y: {label: null, grid: true, nice: true, tickFormat: v => fmt(v, info.formato), ticks: 4},
+      marks: [
+        Plot.ruleY([0], {stroke: "currentColor", strokeOpacity: 0.4}),
+        Plot.areaY(pts, {x: "ano", y: "valor", fill: "var(--obs-chart)", fillOpacity: 0.12, defined: p => p.valor !== null}),
+        Plot.line(pts, {x: "ano", y: "valor", stroke: "var(--obs-chart)", strokeWidth: 2, defined: p => p.valor !== null}),
+        Plot.dot(validos, {x: "ano", y: "valor", r: 3.5, stroke: "var(--obs-chart)", strokeWidth: 2, fill: p => p.saf ? "var(--obs-chart)" : "var(--obs-bg)"}),
+        Plot.tip(validos, Plot.pointer({x: "ano", y: "valor", title: p => `${p.ano}: ${fmt(p.valor, info.formato)}`}))
+      ]
+    })}
+  </figure>`
+})}</div>`
+```

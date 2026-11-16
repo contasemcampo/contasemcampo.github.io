@@ -1,0 +1,20 @@
+---
+title: "Análises"
+description: "As contas dos clubes explicadas: o que os balanços revelam e o que deixam de mostrar."
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: cloud
+  sort-ui: false
+  filter-ui: true
+  fields: [date, title, description, categories, reading-time]
+  date-format: "D [de] MMMM [de] YYYY"
+  feed: true
+---
+
+[Textos em linguagem direta, apoiados nos números publicados pelos próprios clubes. Cada análise diz em que versão da base se apoia, o que os números não mostram e onde conferir as fontes.]{.obs-coluna-intro}
+
+::: {.obs-editorias .obs-ui}
+**Editorias:** Contas dos clubes · SAFs e controle · Dinheiro do jogo · Mercado de atletas · Dívidas e financiamento · Entenda as contas
+:::

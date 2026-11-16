@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "Se citar Contas em Campo, use a referência abaixo. / If you cite Contas em Campo, please use the reference below."
+type: software
+title: "Contas em Campo: análises e comparativos das finanças dos clubes de futebol brasileiros"
+version: "2.0.0"
+date-released: "2026-11-16"
+license: MIT
+repository-code: "https://github.com/contasemcampo/contasemcampo.github.io"
+url: "https://contasemcampo.github.io/"
+authors:
+  - family-names: "Lisboa"
+    given-names: "Tiago Amadeu Braga de"
+    affiliation: "Universidade Federal de Minas Gerais (UFMG)"
+keywords:
+  - "Sociedade Anônima do Futebol"
+  - "SAF"
+  - "football finance"
+  - "financial statements"
+  - "Brazil"
+abstract: >-
+  Site de Contas em Campo: análises, comparador por temas e páginas por
+  clube a partir das demonstrações financeiras de clubes de futebol
+  brasileiros (SAFs e associações), de 2020 em diante, em português e
+  inglês. A licença MIT cobre o código; os textos têm termos próprios. /
+  Contas em Campo website: analyses, a theme-based comparison tool and
+  club pages built from the financial statements of Brazilian football
+  clubs (SAFs and associations), 2020 onwards, in Portuguese and English.
+  The MIT licence covers the code; texts have their own terms.
