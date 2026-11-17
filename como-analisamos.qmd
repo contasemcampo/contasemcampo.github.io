@@ -45,6 +45,13 @@ Alguns critérios que valem para todos:
 - **Gastos com pessoal** podem ou não incluir o quadro administrativo, conforme o que o clube detalha; a base registra qual é o caso.
 - **Campo vazio significa ausência de fonte, nunca zero.**
 
+## Além do balanço {#alem}
+
+As páginas dos clubes trazem também dois dados lidos nas notas explicativas, sempre agregados por ano.
+
+- **Futebol feminino.** Dizemos se as demonstrações do ano mencionam o futebol feminino e se trazem algum número dele. Não mostramos os valores: poucos clubes os publicam, e cada um a seu modo. A ausência de menção não quer dizer que o clube não tenha time feminino, só que o balanço não fala dele.
+- **Operações com atletas.** Alguns clubes listam nas notas, atleta por atleta, as receitas com transferências, empréstimos e mecanismo de solidariedade, e às vezes as aquisições. Mostramos quantas operações a lista traz e quanto elas somam, só quando a soma confere com o total impresso. Poucos clubes publicam essas listas, e a coluna usada varia (valor bruto, líquido ou consolidado). Esse número não é a receita com atletas da demonstração do resultado.
+
 ## O que os números não mostram
 
 - Um balanço é uma fotografia do fim do ano. Não mostra o que aconteceu no meio.

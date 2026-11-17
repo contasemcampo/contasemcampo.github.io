@@ -67,6 +67,15 @@ TXT = {
         "paralela_col": {"ano": "Ano", "entidade": "Entidade", "receita": "Receita comparável",
                          "divida": "Dívida identificada", "pl": "Patrimônio líquido"},
         "paralela_nota": "Não some estes valores aos de cima: são entidades diferentes, e parte das operações aparece nas duas.",
+        "alem": "Além do balanço",
+        "alem_intro": "O que as notas explicativas contam sobre o futebol feminino e sobre as operações com atletas.",
+        "alem_col": {"ano": "Ano", "fem": "Futebol feminino", "rec": "Receitas com atletas listadas",
+                     "aq": "Aquisições listadas"},
+        "fem_valor": {"nao_cita": "não cita", "cita": "cita", "cita_com_numeros": "cita, com números"},
+        "operacoes": lambda n: f"{n} operação" if n == 1 else f"{n} operações",
+        "alem_nota_fem": "Futebol feminino: se as demonstrações do ano mencionam o futebol feminino e se trazem algum número dele. Não mostramos os valores, porque poucos clubes os divulgam e de forma pouco comparável.",
+        "alem_nota_tr": lambda n: (f"Receitas e aquisições listadas: soma das linhas que o clube detalhou por atleta nas notas, só quando a soma confere com o total impresso. Apenas {n} clubes publicam essas listas. A coluna usada varia (valor bruto, líquido ou consolidado), por isso a comparação entre clubes pede cuidado. "
+                                   "Não é o mesmo número da receita com atletas da demonstração do resultado."),
         "comparar": lambda n: f"Comparar {n} com outros clubes",
         "como_link": "Como analisamos",
         "versao": lambda v, d: f"Base {v}, atualizada em {d}.",
@@ -110,6 +119,15 @@ TXT = {
         "paralela_col": {"ano": "Year", "entidade": "Entity", "receita": "Comparable revenue",
                          "divida": "Identified debt", "pl": "Equity"},
         "paralela_nota": "Do not add these to the figures above: they are different entities, and some operations appear in both.",
+        "alem": "Beyond the balance sheet",
+        "alem_intro": "What the notes say about women's football and about player transactions.",
+        "alem_col": {"ano": "Year", "fem": "Women's football", "rec": "Player revenue listed",
+                     "aq": "Acquisitions listed"},
+        "fem_valor": {"nao_cita": "not mentioned", "cita": "mentioned", "cita_com_numeros": "mentioned, with figures"},
+        "operacoes": lambda n: f"{n} operation" if n == 1 else f"{n} operations",
+        "alem_nota_fem": "Women's football: whether the year's statements mention women's football and whether they give any figure for it. We do not show the amounts, because few clubs disclose them and they are hard to compare.",
+        "alem_nota_tr": lambda n: (f"Player revenue and acquisitions listed: sum of the lines the club detailed player by player in the notes, only when the sum matches the printed total. Only {n} clubs publish these lists. The column used varies (gross, net or consolidated), so compare clubs with care. "
+                                   "This is not the same figure as player-trading revenue in the income statement."),
         "comparar": lambda n: f"Compare {n} with other clubs",
         "como_link": "How we analyse",
         "versao": lambda v, d: f"Dataset {v}, updated {d}.",
@@ -155,7 +173,7 @@ def fmt(v: float | None, formato: str, lang: str) -> str:
         return n(v, 1) + "%"
     if formato in ("x", "num"):
         return n(v, 2)
-    if formato == "pessoas":
+    if formato in ("pessoas", "inteiro"):
         return n(v, 0)
     return f"{t['moeda']} {n(v, 1)} {t['mi']}"
 
@@ -224,8 +242,58 @@ def regime_legivel(regime: str | None, lang: str) -> str:
     return TXT[lang].get(regime, regime)
 
 
+def bloco_alem(mods: list[dict], n_clubes_tr: int, lang: str) -> str:
+    """Monta a seção "Além do balanço": feminino e transferências por ano.
+
+    Só mostra agregados (decisão da fase B): a situação do futebol feminino nas
+    demonstrações e, para os clubes que publicam listas por atleta, o número de
+    operações e a soma listada. Sem atleta, contraparte ou valor do feminino.
+
+    Args:
+        mods: linhas de ``modulos.csv`` do clube, em ordem de ano.
+        n_clubes_tr: quantos clubes têm listas de transferências no site.
+        lang: "pt" ou "en".
+
+    Returns:
+        Markdown da seção, ou texto vazio se o clube não tiver nada.
+    """
+    if not mods:
+        return ""
+    t = TXT[lang]
+    col = t["alem_col"]
+    tem_tr = any(numero(m.get(k, "")) is not None for m in mods
+                 for k in ("transf_receita_n", "transf_aquisicao_n"))
+    def ops(m: dict, chave: str) -> str:
+        qtd, soma = numero(m.get(f"transf_{chave}_n", "")), numero(m.get(f"transf_{chave}_rs", ""))
+        if qtd is None:
+            return "—"
+        return f"{fmt(soma, 'rs', lang)} <span class='obs-ui'>({t['operacoes'](int(qtd))})</span>"
+    cab = f"<th>{col['ano']}</th><th>{col['fem']}</th>"
+    if tem_tr:
+        cab += f"<th>{col['rec']}</th><th>{col['aq']}</th>"
+    corpo = ""
+    for m in mods:
+        fem = t["fem_valor"].get(m.get("feminino_situacao") or "", "—")
+        cels = f"<th>{m['ano']}</th><td>{fem}</td>"
+        if tem_tr:
+            cels += f"<td>{ops(m, 'receita')}</td><td>{ops(m, 'aquisicao')}</td>"
+        corpo += f"<tr>{cels}</tr>"
+    notas = t["alem_nota_fem"] + (" " + t["alem_nota_tr"](n_clubes_tr) if tem_tr else "")
+    return f'''
+## {t["alem"]}
+
+{t["alem_intro"]}
+
+```{{=html}}
+<table class="obs-tabela obs-alem"><thead><tr>{cab}</tr></thead><tbody>{corpo}</tbody></table>
+<p class="obs-indicador-nota">{notas}</p>
+```
+'''
+
+
 def pagina_clube(c: dict, linhas: list[dict], inds: dict, analises: list[dict],
-                 versao: dict, lang: str) -> str:
+                 versao: dict, lang: str, mods: list[dict] | None = None,
+                 n_clubes_tr: int = 0) -> str:
     """Monta o .qmd de um clube num idioma.
 
     Args:
@@ -235,6 +303,8 @@ def pagina_clube(c: dict, linhas: list[dict], inds: dict, analises: list[dict],
         analises: índice de análises (todas as línguas).
         versao: conteúdo de ``versao.json``.
         lang: "pt" ou "en".
+        mods: linhas de ``modulos.csv`` do clube (feminino e transferências).
+        n_clubes_tr: quantos clubes têm listas de transferências no site.
     """
     t = TXT[lang]
     ultimo = linhas[-1]
@@ -395,6 +465,7 @@ clubeAtual = "{c['clube']}"
 ```
 
 {bloco_par}
+{bloco_alem(mods or [], n_clubes_tr, lang)}
 ## {t['analises']}
 
 ```{{=html}}
@@ -446,6 +517,15 @@ def main() -> None:
     inds = {d["campo"]: d for d in ler_csv("indicadores.csv")}
     versao = json.loads((DADOS / "versao.json").read_text(encoding="utf-8"))
 
+    modulos = ler_csv("modulos.csv") if (DADOS / "modulos.csv").exists() else []
+    mods_por_id: dict[str, list[dict]] = {}
+    for m in modulos:
+        mods_por_id.setdefault(m["clube_id"], []).append(m)
+    for lista in mods_por_id.values():
+        lista.sort(key=lambda m: int(m["ano"]))
+    n_clubes_tr = len({m["clube_id"] for m in modulos if numero(m.get("transf_receita_n", ""))
+                       is not None or numero(m.get("transf_aquisicao_n", "")) is not None})
+
     analises = indice_analises()
     (DADOS / "analises.json").write_text(json.dumps(analises, ensure_ascii=False, indent=1), encoding="utf-8")
 
@@ -467,7 +547,8 @@ def main() -> None:
                 continue
             destino = pasta / c["slug"]
             destino.mkdir(parents=True, exist_ok=True)
-            (destino / "index.qmd").write_text(pagina_clube(c, linhas, inds, analises, versao, lang), encoding="utf-8")
+            (destino / "index.qmd").write_text(pagina_clube(c, linhas, inds, analises, versao, lang,
+                                                               mods_por_id.get(str(c["clube_id"]), []), n_clubes_tr), encoding="utf-8")
             gerados += 1
         (pasta / "index.qmd").write_text(pagina_indice([c for c in clubes if c["clube"] in por_clube], lang), encoding="utf-8")
         print(f"{lang}: {gerados} páginas de clubes em {pasta.relative_to(RAIZ)}/")

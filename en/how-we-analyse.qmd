@@ -45,6 +45,13 @@ Criteria that apply throughout:
 - **Personnel costs** may or may not include administrative staff, depending on what the club discloses; the dataset records which.
 - **A blank means no source, never zero.**
 
+## Beyond the balance sheet {#alem}
+
+Club pages also show two items read from the notes, always aggregated by year.
+
+- **Women's football.** We say whether the year's statements mention women's football and whether they give any figure for it. We do not show the amounts: few clubs publish them, each in its own way. No mention does not mean the club has no women's team, only that the statements do not talk about it.
+- **Player transactions.** Some clubs list in the notes, player by player, revenue from transfers, loans and solidarity payments, and sometimes acquisitions. We show how many operations the list contains and what they add up to, only when the sum matches the printed total. Few clubs publish these lists, and the column used varies (gross, net or consolidated). This figure is not player-trading revenue from the income statement.
+
 ## What the numbers do not show
 
 - A balance sheet is a photograph of the year end. It does not show what happened in between.
