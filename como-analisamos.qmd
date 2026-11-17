@@ -50,7 +50,7 @@ Alguns critérios que valem para todos:
 As páginas dos clubes trazem também dois dados lidos nas notas explicativas, sempre agregados por ano.
 
 - **Futebol feminino.** Dizemos se as demonstrações do ano mencionam o futebol feminino e se trazem algum número dele. Não mostramos os valores: poucos clubes os publicam, e cada um a seu modo. A ausência de menção não quer dizer que o clube não tenha time feminino, só que o balanço não fala dele.
-- **Operações com atletas.** Alguns clubes listam nas notas, atleta por atleta, as receitas com transferências, empréstimos e mecanismo de solidariedade, e às vezes as aquisições. Mostramos quantas operações a lista traz e quanto elas somam, só quando a soma confere com o total impresso. Poucos clubes publicam essas listas, e a coluna usada varia (valor bruto, líquido ou consolidado). Esse número não é a receita com atletas da demonstração do resultado.
+- **Operações com atletas.** Alguns clubes listam nas notas, atleta por atleta, as receitas com transferências, empréstimos e mecanismo de solidariedade, e às vezes as aquisições. Mostramos quantas operações a lista traz e quanto elas somam, só quando essa soma confere com o total que o próprio clube imprimiu, admitida a diferença de arredondamento — em oito das listas publicadas ela é de R$ 1 mil ou R$ 2 mil. Quando a lista de um ano não fecha, o ano fica sem esse número, mas pode continuar aparecendo pela outra lista ou pela lista reapresentada no balanço seguinte. Poucos clubes publicam essas listas, e a coluna usada varia (valor bruto, líquido ou consolidado). Esse número não é a receita com atletas da demonstração do resultado.
 
 ## O que os números não mostram
 

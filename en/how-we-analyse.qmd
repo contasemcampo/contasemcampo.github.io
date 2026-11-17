@@ -50,7 +50,7 @@ Criteria that apply throughout:
 Club pages also show two items read from the notes, always aggregated by year.
 
 - **Women's football.** We say whether the year's statements mention women's football and whether they give any figure for it. We do not show the amounts: few clubs publish them, each in its own way. No mention does not mean the club has no women's team, only that the statements do not talk about it.
-- **Player transactions.** Some clubs list in the notes, player by player, revenue from transfers, loans and solidarity payments, and sometimes acquisitions. We show how many operations the list contains and what they add up to, only when the sum matches the printed total. Few clubs publish these lists, and the column used varies (gross, net or consolidated). This figure is not player-trading revenue from the income statement.
+- **Player transactions.** Some clubs list in the notes, player by player, revenue from transfers, loans and solidarity payments, and sometimes acquisitions. We show how many operations the list contains and what they add up to, only when that sum matches the total the club itself printed, allowing for rounding — in eight of the published lists the gap is BRL 1 or 2 thousand. When a year's list does not match, that year loses the figure, but it may still appear through the other list or through the list restated in the following statements. Few clubs publish these lists, and the column used varies (gross, net or consolidated). This figure is not player-trading revenue from the income statement.
 
 ## What the numbers do not show
 

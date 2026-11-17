@@ -74,7 +74,7 @@ TXT = {
         "fem_valor": {"nao_cita": "não cita", "cita": "cita", "cita_com_numeros": "cita, com números"},
         "operacoes": lambda n: f"{n} operação" if n == 1 else f"{n} operações",
         "alem_nota_fem": "Futebol feminino: se as demonstrações do ano mencionam o futebol feminino e se trazem algum número dele. Não mostramos os valores, porque poucos clubes os divulgam e de forma pouco comparável.",
-        "alem_nota_tr": lambda n: (f"Receitas e aquisições listadas: soma das linhas que o clube detalhou por atleta nas notas, só quando a soma confere com o total impresso. Apenas {n} clubes publicam essas listas. A coluna usada varia (valor bruto, líquido ou consolidado), por isso a comparação entre clubes pede cuidado. "
+        "alem_nota_tr": lambda n: (f"Receitas e aquisições listadas: soma das linhas que o clube detalhou por atleta nas notas, só quando ela confere com o total impresso do próprio clube, admitida a diferença de arredondamento (até R$ 2 mil). Apenas {n} clubes publicam essas listas, e uma lista pode faltar num ano em que a outra existe. A coluna usada varia (valor bruto, líquido ou consolidado), por isso a comparação entre clubes pede cuidado. "
                                    "Não é o mesmo número da receita com atletas da demonstração do resultado."),
         "comparar": lambda n: f"Comparar {n} com outros clubes",
         "como_link": "Como analisamos",
@@ -126,7 +126,7 @@ TXT = {
         "fem_valor": {"nao_cita": "not mentioned", "cita": "mentioned", "cita_com_numeros": "mentioned, with figures"},
         "operacoes": lambda n: f"{n} operation" if n == 1 else f"{n} operations",
         "alem_nota_fem": "Women's football: whether the year's statements mention women's football and whether they give any figure for it. We do not show the amounts, because few clubs disclose them and they are hard to compare.",
-        "alem_nota_tr": lambda n: (f"Player revenue and acquisitions listed: sum of the lines the club detailed player by player in the notes, only when the sum matches the printed total. Only {n} clubs publish these lists. The column used varies (gross, net or consolidated), so compare clubs with care. "
+        "alem_nota_tr": lambda n: (f"Player revenue and acquisitions listed: sum of the lines the club detailed player by player in the notes, only when it matches the club\'s own printed total, allowing for rounding (up to BRL 2 thousand). Only {n} clubs publish these lists, and one list may be missing in a year where the other exists. The column used varies (gross, net or consolidated), so compare clubs with care. "
                                    "This is not the same figure as player-trading revenue in the income statement."),
         "comparar": lambda n: f"Compare {n} with other clubs",
         "como_link": "How we analyse",
